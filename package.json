@@ -1,0 +1,23 @@
+{
+  "name": "spotify-playlist-maker",
+  "version": "1.0.0",
+  "description": "Desktop app for making the playlist creation process easy",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwpark2014/SpotifyPlaylistMaker.git"
+  },
+  "author": "Mason Park",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mwpark2014/SpotifyPlaylistMaker/issues"
+  },
+  "homepage": "https://github.com/mwpark2014/SpotifyPlaylistMaker#readme",
+  "devDependencies": {
+    "electron": "^21.3.1"
+  }
+}
