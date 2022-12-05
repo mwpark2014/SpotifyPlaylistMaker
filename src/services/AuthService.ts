@@ -31,9 +31,12 @@ export const AuthContext = createContext<AuthTokens | undefined>(undefined);
 export function authorize(authConfig: AuthConfig): void {
   const { clientId, authorizeEndpoint, redirectUri, scopes } = authConfig;
 
+  const state = base64URLEncode(randomBytes(16));
+
   const pkce = createPKCECodes();
   const codeChallenge = pkce.codeChallenge;
   window.sessionStorage.setItem('code_verifier', pkce.codeVerifier);
+  window.sessionStorage.setItem('state', state);
 
   const query = {
     client_id: clientId,
@@ -42,6 +45,7 @@ export function authorize(authConfig: AuthConfig): void {
     redirect_uri: redirectUri,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
+    state,
   };
   // Responds with a 302 redirect
   const url = `${authorizeEndpoint}?${new URLSearchParams(query)}`;
@@ -57,10 +61,20 @@ export async function logout(authConfig: AuthConfig): Promise<boolean> {
 export async function fetchToken(
   authConfig: AuthConfig,
   code: string,
+  state: string,
   setAuthTokens: Function,
 ): Promise<void> {
   console.log('Fetching token');
   const { clientId, tokenEndpoint, redirectUri } = authConfig;
+
+  if (state !== window.sessionStorage.getItem('state')) {
+    throw new Error(
+      'State sent by client does not match state returned by auth server. ' +
+        '(This can be a sign of a CSRF attempt)',
+    );
+  }
+  window.sessionStorage.removeItem('state');
+
   const code_verifier = window.sessionStorage.getItem('code_verifier');
   if (code_verifier === null) {
     throw new Error('PKCE code verifier not found in session storage');

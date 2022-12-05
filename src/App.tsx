@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
   authorize,
   logout,
@@ -47,8 +47,6 @@ function SpotifyLoginLink(): ReactElement {
 }
 
 function SpotifyLogoutLink(): ReactElement {
-  const tokens = useContext(AuthContext);
-  console.log(tokens);
   return <button onClick={() => logout(authConfig)}>Log out of Spotify</button>;
 }
 

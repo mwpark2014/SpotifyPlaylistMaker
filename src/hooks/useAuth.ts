@@ -9,9 +9,10 @@ export default function useAuth(
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get('code');
+    const state = searchParams.get('state');
 
-    if (code) {
-      fetchToken(authConfig, code, setAuthTokens);
+    if (code && state) {
+      fetchToken(authConfig, code, state, setAuthTokens);
     }
   }, [authConfig, setAuthTokens]);
 }
