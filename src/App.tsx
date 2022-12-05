@@ -1,3 +1,6 @@
+import React from 'react';
+import { authorize } from './services/AuthService';
+import authConfig from './configs/AuthConfig';
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,13 +16,18 @@ function App() {
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
           Learn React
         </a>
       </header>
+      <SpotifyLoginLink />
     </div>
   );
+}
+
+function SpotifyLoginLink() {
+  return null;
+  <button onClick={() => authorize(authConfig)}>Login to Spotify</button>;
 }
 
 export default App;
