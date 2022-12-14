@@ -9,6 +9,7 @@ import authConfig from './configs/AuthConfig';
 import useAuth from './hooks/useAuth';
 import logo from './logo.svg';
 import './App.css';
+import PlaylistContainer from './components/PlaylistContainer';
 
 function App() {
   const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(
@@ -33,6 +34,7 @@ function App() {
             Learn React
           </a>
           <SpotifyLoginLink />
+          {authTokens?.accessToken && <PlaylistContainer />}
           {authTokens?.accessToken && <SpotifyLogoutLink />}
         </header>
       </div>
