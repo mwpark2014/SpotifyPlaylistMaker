@@ -21,7 +21,7 @@ function App() {
     <AuthContext.Provider value={authTokens}>
       <div className="App">
         <header className="App-header">
-          <SpotifyLoginLink />
+          {!authTokens?.accessToken && <SpotifyLoginLink />}
           {authTokens?.accessToken && <PlaylistContainer />}
           {authTokens?.accessToken && <SpotifyLogoutLink />}
         </header>

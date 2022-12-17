@@ -1,26 +1,15 @@
 import React from 'react';
+import Playlist from './Playlist';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { testTracks } from '../tests/PlaylistContainer.test';
 
-type PlaylistReponse = {
-  items: Item[];
-};
-
-type Item = {
-  track: Track;
-};
-
-type Track = {
-  name: string;
-  uri: string;
-};
-
 function PlaylistContainer() {
-  const trackRows = (testTracks as PlaylistReponse).items.map(item => (
-    <div>
-      <a href={item.track.uri}>{item.track.name}</a>
-    </div>
-  ));
-  return <div>{trackRows}</div>;
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <Playlist tracks={testTracks} />
+    </DndProvider>
+  );
 }
 
 export default PlaylistContainer;
