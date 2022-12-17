@@ -1,33 +1,16 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import {
+  useDrag,
+  useDrop,
+  DragSourceMonitor,
+  DropTargetMonitor,
+} from 'react-dnd';
 
-type PlaylistReponse = {
-  items: SpotifyItem[];
-  [x: string]: unknown; // Remove after getting rid of extra fields
-};
+import { DRAGGABLE_TRACK_TYPE } from '../util/constants';
 
-type SpotifyItem = {
-  added_at: string;
-  track: SpotifyTrack;
-  [x: string]: unknown; // Remove after getting rid of extra fields
-};
-
-type SpotifyTrack = {
-  key?: string;
-  name: string;
-  album: SpotifyAlbum;
-  uri: string;
-  duration_ms: number;
-  [x: string]: unknown; // Remove after getting rid of extra fields
-};
-
-type SpotifyAlbum = {
-  name: string;
-  [x: string]: unknown; // Remove after getting rid of extra fields
-};
-
-type Track = {
+export type Track = {
   key: number;
   title: string;
   duration: string;
@@ -55,17 +38,88 @@ const columns: ColumnsType<Track> = [
   },
 ];
 
-function Playlist({ tracks }: { tracks: PlaylistReponse }) {
-  const trackData: Track[] = tracks.items.map((item, index) => ({
-    key: index,
-    dateAdded: item.added_at,
-    title: item.track.name,
-    album: item.track.album.name,
-    duration: '' + item.track.duration_ms,
-    uri: item.track.uri,
-  }));
+const components = {
+  body: {
+    row: DraggableBodyRow,
+  },
+};
 
-  return <Table columns={columns} dataSource={trackData} />;
+function Playlist({
+  tracks,
+  onChange,
+}: {
+  tracks: Track[];
+  onChange: Function;
+}) {
+  const moveRow = useCallback((dragIndex: number, hoverIndex: number) => {
+    // const dragRow = data[dragIndex];
+    // setData(
+    //   update(data, {
+    //     $splice: [
+    //       [dragIndex, 1],
+    //       [hoverIndex, 0, dragRow]
+    //     ]
+    //   })
+    // );
+  }, []);
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={tracks}
+      components={components}
+      onRow={(_, index) => {
+        return {
+          index,
+          moveRow,
+        } as React.HTMLAttributes<any>;
+      }}
+    />
+  );
+}
+
+function DraggableBodyRow({
+  index,
+  moveRow,
+  className,
+  style,
+  ...restProps
+}: any) {
+  const ref = useRef<HTMLTableRowElement>(null);
+  const [{ isOver, dropClassName }, drop] = useDrop({
+    accept: DRAGGABLE_TRACK_TYPE,
+    collect: monitor => {
+      const { index: dragIndex } = monitor.getItem() || {};
+      if (dragIndex === index) {
+        return {};
+      }
+      return {
+        isOver: monitor.isOver(),
+        dropClassName:
+          dragIndex < index ? ' drop-over-downward' : ' drop-over-upward',
+      };
+    },
+    drop: (item: { index: number }) => {
+      moveRow(item.index, index);
+    },
+  });
+  const [, drag] = useDrag({
+    type: DRAGGABLE_TRACK_TYPE,
+    item: { index },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  drop(drag(ref));
+
+  return (
+    <tr
+      ref={ref}
+      className={`${className}${isOver ? dropClassName : ''}`}
+      style={{ cursor: 'move', ...style }}
+      {...restProps}
+    />
+  );
 }
 
 export default Playlist;
