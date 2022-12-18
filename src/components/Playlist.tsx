@@ -9,16 +9,8 @@ import {
 } from 'react-dnd';
 
 import { DRAGGABLE_TRACK_TYPE } from '../util/constants';
+import { Track } from '../util/typings';
 import './Playlist.css';
-
-export type Track = {
-  key: number;
-  title: string;
-  duration: string;
-  dateAdded: string;
-  album: string;
-  uri: string;
-};
 
 const columns: ColumnsType<Track> = [
   {

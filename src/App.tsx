@@ -4,7 +4,7 @@ import {
   logout,
   AuthContext,
   AuthTokens,
-} from './services/AuthService';
+} from './services/authService';
 import authConfig from './configs/authConfig';
 import useAuth from './hooks/useAuth';
 import './App.css';

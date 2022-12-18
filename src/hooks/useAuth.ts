@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { AuthConfig } from '../configs/authConfig';
-import { fetchToken } from '../services/AuthService';
+import { fetchToken } from '../services/authService';
 
 export default function useAuth(
   authConfig: AuthConfig,

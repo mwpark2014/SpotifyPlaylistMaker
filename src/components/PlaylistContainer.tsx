@@ -3,7 +3,9 @@ import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import Playlist, { Track } from './Playlist';
+import Playlist from './Playlist';
+import PlaylistSelect from './PlaylistSelect';
+import { Track } from '../util/typings';
 import { testTracks } from '../tests/PlaylistContainer.test';
 
 type PlaylistReponse = {
@@ -71,7 +73,12 @@ function PlaylistContainer() {
     <Playlist tracks={td} onPlaylistChange={changeHandlerFactory(index)} />
   ));
 
-  return <DndProvider backend={HTML5Backend}>{playlists}</DndProvider>;
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <PlaylistSelect />
+      {playlists}
+    </DndProvider>
+  );
 }
 
 export default PlaylistContainer;
