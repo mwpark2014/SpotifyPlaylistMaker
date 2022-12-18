@@ -5,7 +5,7 @@ import {
   AuthContext,
   AuthTokens,
 } from './services/AuthService';
-import authConfig from './configs/AuthConfig';
+import authConfig from './configs/authConfig';
 import useAuth from './hooks/useAuth';
 import './App.css';
 import PlaylistContainer from './components/PlaylistContainer';
