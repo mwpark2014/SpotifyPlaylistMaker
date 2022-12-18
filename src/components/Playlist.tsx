@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import {
@@ -9,6 +9,7 @@ import {
 } from 'react-dnd';
 
 import { DRAGGABLE_TRACK_TYPE } from '../util/constants';
+import './Playlist.css';
 
 export type Track = {
   key: number;
@@ -40,16 +41,16 @@ const columns: ColumnsType<Track> = [
 
 const components = {
   body: {
-    row: DraggableBodyRow,
+    row: DraggableTrack,
   },
 };
 
 function Playlist({
   tracks,
-  onChange,
+  onPlaylistChange,
 }: {
   tracks: Track[];
-  onChange: Function;
+  onPlaylistChange: Function;
 }) {
   return (
     <Table
@@ -59,21 +60,28 @@ function Playlist({
       onRow={(_, index) => {
         return {
           index,
-          onChange,
+          onPlaylistChange,
         } as any;
       }}
     />
   );
 }
 
-function DraggableBodyRow({
+function DraggableTrack({
   index,
-  onChange,
+  onPlaylistChange,
   className,
   style,
   ...restProps
 }: any) {
   const ref = useRef<HTMLTableRowElement>(null);
+  const [, drag] = useDrag({
+    type: DRAGGABLE_TRACK_TYPE,
+    item: { index },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
   const [{ isOver, dropClassName }, drop] = useDrop({
     accept: DRAGGABLE_TRACK_TYPE,
     collect: (monitor: DropTargetMonitor) => {
@@ -88,15 +96,8 @@ function DraggableBodyRow({
       };
     },
     drop: (item: { index: number }) => {
-      onChange(item.index, index);
+      onPlaylistChange(item.index, index);
     },
-  });
-  const [, drag] = useDrag({
-    type: DRAGGABLE_TRACK_TYPE,
-    item: { index },
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
   });
   drop(drag(ref));
 

@@ -46,24 +46,29 @@ function PlaylistContainer() {
   // Keep array of Playlists with the 0th one always pointing at the main
   // playlist being edited
   const [playlistData, setPlaylistData] = useState<Track[][]>([trackData]);
-  const changeHandlerFactory = (playlistIndex: number) => {
-    return (dragIndex: number, hoverIndex: number) => {
-      const dragRow = playlistData[playlistIndex][dragIndex];
-      setPlaylistData(
-        update(playlistData, {
-          [playlistIndex]: {
-            $splice: [
-              [dragIndex, 1],
-              [hoverIndex, 0, dragRow],
-            ],
-          },
-        }),
-      );
-    };
-  };
+  // Memoize each change handler
+  const changeHandlerFactory = useCallback(
+    // Create a new change handler for each playlist index
+    (playlistIndex: number) => {
+      return (dragIndex: number, hoverIndex: number) => {
+        const dragRow = playlistData[playlistIndex][dragIndex];
+        setPlaylistData(
+          update(playlistData, {
+            [playlistIndex]: {
+              $splice: [
+                [dragIndex, 1],
+                [hoverIndex, 0, dragRow],
+              ],
+            },
+          }),
+        );
+      };
+    },
+    [playlistData, setPlaylistData],
+  );
 
   const playlists = playlistData.map((td, index) => (
-    <Playlist tracks={td} onChange={changeHandlerFactory(index)} />
+    <Playlist tracks={td} onPlaylistChange={changeHandlerFactory(index)} />
   ));
 
   return <DndProvider backend={HTML5Backend}>{playlists}</DndProvider>;
