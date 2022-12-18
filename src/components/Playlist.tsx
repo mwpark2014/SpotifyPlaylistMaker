@@ -51,18 +51,6 @@ function Playlist({
   tracks: Track[];
   onChange: Function;
 }) {
-  const moveRow = useCallback((dragIndex: number, hoverIndex: number) => {
-    // const dragRow = data[dragIndex];
-    // setData(
-    //   update(data, {
-    //     $splice: [
-    //       [dragIndex, 1],
-    //       [hoverIndex, 0, dragRow]
-    //     ]
-    //   })
-    // );
-  }, []);
-
   return (
     <Table
       columns={columns}
@@ -71,8 +59,8 @@ function Playlist({
       onRow={(_, index) => {
         return {
           index,
-          moveRow,
-        } as React.HTMLAttributes<any>;
+          onChange,
+        } as any;
       }}
     />
   );
@@ -80,7 +68,7 @@ function Playlist({
 
 function DraggableBodyRow({
   index,
-  moveRow,
+  onChange,
   className,
   style,
   ...restProps
@@ -88,8 +76,8 @@ function DraggableBodyRow({
   const ref = useRef<HTMLTableRowElement>(null);
   const [{ isOver, dropClassName }, drop] = useDrop({
     accept: DRAGGABLE_TRACK_TYPE,
-    collect: monitor => {
-      const { index: dragIndex } = monitor.getItem() || {};
+    collect: (monitor: DropTargetMonitor) => {
+      const { index: dragIndex } = monitor.getItem() || ({} as any);
       if (dragIndex === index) {
         return {};
       }
@@ -100,13 +88,13 @@ function DraggableBodyRow({
       };
     },
     drop: (item: { index: number }) => {
-      moveRow(item.index, index);
+      onChange(item.index, index);
     },
   });
   const [, drag] = useDrag({
     type: DRAGGABLE_TRACK_TYPE,
     item: { index },
-    collect: monitor => ({
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });

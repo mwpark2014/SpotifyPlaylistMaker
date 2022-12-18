@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-// import update from 'immutability-helper';
+import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -46,19 +46,27 @@ function PlaylistContainer() {
   // Keep array of Playlists with the 0th one always pointing at the main
   // playlist being edited
   const [playlistData, setPlaylistData] = useState<Track[][]>([trackData]);
-  const changeHandlerFactory = useCallback(() => {
-    return () => {
-      return () => {
-        setPlaylistData(playlistData);
-      };
+  const changeHandlerFactory = (playlistIndex: number) => {
+    return (dragIndex: number, hoverIndex: number) => {
+      const dragRow = playlistData[playlistIndex][dragIndex];
+      setPlaylistData(
+        update(playlistData, {
+          [playlistIndex]: {
+            $splice: [
+              [dragIndex, 1],
+              [hoverIndex, 0, dragRow],
+            ],
+          },
+        }),
+      );
     };
-  }, [setPlaylistData]);
+  };
 
-  playlistData.map((td, index) => (
-    <Playlist tracks={td} onChange={changeHandlerFactory()} />
+  const playlists = playlistData.map((td, index) => (
+    <Playlist tracks={td} onChange={changeHandlerFactory(index)} />
   ));
 
-  return <DndProvider backend={HTML5Backend}></DndProvider>;
+  return <DndProvider backend={HTML5Backend}>{playlists}</DndProvider>;
 }
 
 export default PlaylistContainer;
