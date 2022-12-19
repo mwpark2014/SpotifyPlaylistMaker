@@ -6,10 +6,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
-import { getTracks, PlaylistReponse } from '../util/spotifyAPIHelper';
+import { getTracks, SpotifyTracksResponse } from '../util/spotifyAPIHelper';
 import { TrackT, PlaylistT } from '../util/typings';
 import { AuthContext } from '../services/authService';
-// import { testTracks } from '../tests/PlaylistContainer.test';
 
 function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   // Keep array of Playlists with the 0th one always pointing at the main
@@ -68,7 +67,7 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   );
 }
 
-function getTrackDataFromResponse(response: { data: PlaylistReponse }) {
+function getTrackDataFromResponse(response: { data: SpotifyTracksResponse }) {
   return response.data.items.map((item, index) => ({
     key: index,
     dateAdded: item.added_at,
