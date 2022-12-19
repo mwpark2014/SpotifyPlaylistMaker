@@ -11,5 +11,6 @@ export type TrackT = {
 
 export type PlaylistT = {
   name: string;
+  id: string;
   [x: string]: unknown;
 };

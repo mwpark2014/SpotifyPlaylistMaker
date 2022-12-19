@@ -2,9 +2,15 @@ import React from 'react';
 import { Select } from 'antd';
 import { PlaylistT } from '../util/typings';
 
-function PlaylistSelect({ playlists }: { playlists: PlaylistT[] }) {
+function PlaylistSelect({
+  playlists,
+  onSelect,
+}: {
+  playlists: PlaylistT[];
+  onSelect: (value: string, option: any) => void;
+}) {
   const options = playlists.map(playlist => ({
-    value: '',
+    value: playlist.id,
     label: playlist.name,
   }));
   return (
@@ -23,6 +29,7 @@ function PlaylistSelect({ playlists }: { playlists: PlaylistT[] }) {
           .localeCompare((optionB?.label ?? '').toLowerCase())
       }
       options={options}
+      onSelect={onSelect}
     />
   );
 }

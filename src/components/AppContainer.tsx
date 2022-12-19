@@ -26,6 +26,7 @@ function AppContainer() {
     userPlaylists = (playlistResponse.data.items as any).map(
       (playlist: any) => ({
         name: playlist.name,
+        id: playlist.id,
       }),
     );
   }
