@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, memo, useState } from 'react';
+import { useCallback, useContext, memo, useState } from 'react';
 import { useQuery } from 'react-query';
 import update from 'immutability-helper';
 import { DndProvider } from 'react-dnd';

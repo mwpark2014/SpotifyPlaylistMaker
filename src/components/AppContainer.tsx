@@ -1,10 +1,11 @@
-import React, { ReactElement, useContext } from 'react';
+import { ReactElement, useContext } from 'react';
 import { useQuery } from 'react-query';
 
 import PlaylistContainer from './PlaylistContainer';
 import { AuthContext, authorize, logout } from '../services/authService';
 import authConfig from '../configs/authConfig';
-import { getMyProfile, getPlaylists } from '../util/spotifyAPIHelper';
+import { getMyPlaylists, getMyProfile } from '../util/spotifyAPIHelper';
+import { PlaylistT } from '../util/typings';
 
 function AppContainer() {
   const authTokens = useContext(AuthContext);
@@ -14,21 +15,18 @@ function AppContainer() {
     { enabled: !!authTokens?.accessToken },
   );
 
-  const { data: playlistResponse } = useQuery(
+  const { data: playlistsResponse } = useQuery(
     'playlists',
-    () =>
-      getPlaylists(authTokens?.accessToken, (profileResponse as any)?.data.id),
-    { enabled: !!profileResponse },
+    () => getMyPlaylists(authTokens?.accessToken),
+    { enabled: !!authTokens?.accessToken },
   );
 
-  let userPlaylists = [];
-  if (playlistResponse) {
-    userPlaylists = (playlistResponse.data.items as any).map(
-      (playlist: any) => ({
-        name: playlist.name,
-        id: playlist.id,
-      }),
-    );
+  let userPlaylists: PlaylistT[] = [];
+  if (playlistsResponse) {
+    userPlaylists = playlistsResponse.data.items.map(playlist => ({
+      name: playlist.name,
+      id: playlist.id,
+    }));
   }
 
   return (
