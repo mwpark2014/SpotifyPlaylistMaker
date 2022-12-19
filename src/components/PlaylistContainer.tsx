@@ -5,7 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
-import { Track } from '../util/typings';
+import { TrackT, PlaylistT } from '../util/typings';
 import { testTracks } from '../tests/PlaylistContainer.test';
 
 type PlaylistReponse = {
@@ -33,7 +33,7 @@ type SpotifyAlbum = {
   [x: string]: unknown; // Remove after getting rid of extra fields
 };
 
-const trackData: Track[] = (testTracks as PlaylistReponse).items.map(
+const trackData: TrackT[] = (testTracks as PlaylistReponse).items.map(
   (item, index) => ({
     key: index,
     dateAdded: item.added_at,
@@ -44,10 +44,10 @@ const trackData: Track[] = (testTracks as PlaylistReponse).items.map(
   }),
 );
 
-function PlaylistContainer() {
+function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   // Keep array of Playlists with the 0th one always pointing at the main
   // playlist being edited
-  const [playlistData, setPlaylistData] = useState<Track[][]>([trackData]);
+  const [playlistData, setPlaylistData] = useState<TrackT[][]>([trackData]);
   // Memoize each change handler
   const changeHandlerFactory = useCallback(
     // Create a new change handler for each playlist index
@@ -75,7 +75,7 @@ function PlaylistContainer() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <PlaylistSelect />
+      <PlaylistSelect playlists={userPlaylists} />
       {playlists}
     </DndProvider>
   );

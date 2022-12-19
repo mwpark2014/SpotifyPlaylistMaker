@@ -1,6 +1,6 @@
 // Typings for objects used throughout application
 
-export type Track = {
+export type TrackT = {
   key: number;
   title: string;
   duration: string;
@@ -9,4 +9,7 @@ export type Track = {
   uri: string;
 };
 
-export type Playlist = Track[];
+export type PlaylistT = {
+  name: string;
+  [x: string]: unknown;
+};

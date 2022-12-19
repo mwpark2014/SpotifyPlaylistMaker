@@ -9,10 +9,10 @@ import {
 } from 'react-dnd';
 
 import { DRAGGABLE_TRACK_TYPE } from '../util/constants';
-import { Track } from '../util/typings';
+import { TrackT } from '../util/typings';
 import './Playlist.css';
 
-const columns: ColumnsType<Track> = [
+const columns: ColumnsType<TrackT> = [
   {
     title: 'Title',
     dataIndex: 'title',
@@ -41,7 +41,7 @@ function Playlist({
   tracks,
   onPlaylistChange,
 }: {
-  tracks: Track[];
+  tracks: TrackT[];
   onPlaylistChange: Function;
 }) {
   return (
