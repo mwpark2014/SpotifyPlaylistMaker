@@ -95,3 +95,9 @@ export type SpotifyTrack = {
 type SpotifyAlbum = {
   name: string;
 };
+
+export type AuthTokens = {
+  accessToken: string;
+  expiresIn: string;
+  refreshToken: string;
+};

@@ -14,12 +14,16 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const [mainTracksData, setMainTracksData] = useState<TrackT[]>([]);
   const [playlistId, setPlaylistId] = useState<string>();
 
-  useQuery(['tracks', playlistId], useAuth(getTracks, playlistId!), {
-    enabled: playlistId != null,
-    onSuccess: data => {
-      setMainTracksData(_getTrackDataFromResponse(data));
+  useQuery(
+    ['tracks', playlistId],
+    useAuth<SpotifyTracksResponse>(getTracks, playlistId!),
+    {
+      enabled: playlistId != null,
+      onSuccess: data => {
+        setMainTracksData(_getTrackDataFromResponse(data));
+      },
     },
-  });
+  );
 
   // Memoize the change handler
   const handleChange = useCallback(

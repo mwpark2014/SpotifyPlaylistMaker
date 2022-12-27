@@ -9,25 +9,22 @@ const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
 export const SEARCH_ENDPOINT = `${SPOTIFY_API_BASE_URL}/search`;
 
-export const getMyProfile = async (authToken: string | undefined) =>
-  axios.get<SpotifyProfileResponse>(`${SPOTIFY_API_BASE_URL}/me`, {
-    headers: { Authorization: `Bearer ${authToken}` },
-  });
+export const getMyProfile = async (config: AxiosRequestConfig) =>
+  axios.get<SpotifyProfileResponse>(`${SPOTIFY_API_BASE_URL}/me`, config);
 
-export const getMyPlaylists = async (authToken: string | undefined) =>
-  axios.get<SpotifyPlaylistsResponse>(`${SPOTIFY_API_BASE_URL}/me/playlists`, {
-    headers: { Authorization: `Bearer ${authToken}` },
-  });
+export const getMyPlaylists = async (config: AxiosRequestConfig) =>
+  axios.get<SpotifyPlaylistsResponse>(
+    `${SPOTIFY_API_BASE_URL}/me/playlists`,
+    config,
+  );
 
 export const getPlaylists = async (
-  authToken: string | undefined,
-  userId: string | undefined,
+  config: AxiosRequestConfig,
+  userId: string,
 ) =>
   axios.get<SpotifyPlaylistsResponse>(
     `${SPOTIFY_API_BASE_URL}/users/${userId}/playlists`,
-    {
-      headers: { Authorization: `Bearer ${authToken}` },
-    },
+    config,
   );
 
 export const getTracks = async (

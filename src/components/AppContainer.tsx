@@ -5,20 +5,29 @@ import PlaylistContainer from './PlaylistContainer';
 import { AuthContext, authorize, logout } from '../services/authService';
 import authConfig from '../configs/authConfig';
 import { getMyPlaylists, getMyProfile } from '../util/spotifyAPIHelper';
-import { PlaylistT } from '../util/typings';
+import {
+  PlaylistT,
+  SpotifyPlaylistsResponse,
+  SpotifyProfileResponse,
+} from '../util/typings';
+import useAuth from '../hooks/useAuth';
 
 function AppContainer() {
   const authTokens = useContext(AuthContext);
+  const isLoggedIn = !!authTokens?.accessToken;
+
   const { data: profileResponse } = useQuery(
     'profile',
-    () => getMyProfile(authTokens?.accessToken),
-    { enabled: !!authTokens?.accessToken },
+    useAuth<SpotifyProfileResponse>(getMyProfile),
+    {
+      enabled: isLoggedIn,
+    },
   );
 
   const { data: playlistsResponse } = useQuery(
     'playlists',
-    () => getMyPlaylists(authTokens?.accessToken),
-    { enabled: !!authTokens?.accessToken },
+    useAuth<SpotifyPlaylistsResponse>(getMyPlaylists),
+    { enabled: isLoggedIn },
   );
 
   let userPlaylists: PlaylistT[] = [];
@@ -31,14 +40,10 @@ function AppContainer() {
 
   return (
     <div className="App">
-      {authTokens?.accessToken && (
-        <h1>{`Welcome ${profileResponse?.data.display_name}`}</h1>
-      )}
-      {!authTokens?.accessToken && <SpotifyLoginLink />}
-      {authTokens?.accessToken && (
-        <PlaylistContainer userPlaylists={userPlaylists} />
-      )}
-      {authTokens?.accessToken && <SpotifyLogoutLink />}
+      {isLoggedIn && <h1>{`Welcome ${profileResponse?.data.display_name}`}</h1>}
+      {!isLoggedIn && <SpotifyLoginLink />}
+      {isLoggedIn && <PlaylistContainer userPlaylists={userPlaylists} />}
+      {isLoggedIn && <SpotifyLogoutLink />}
     </div>
   );
 }

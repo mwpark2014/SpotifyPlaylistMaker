@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { AuthContext, AuthTokens, fetchToken } from './services/authService';
+import { AuthContext, fetchToken } from './services/authService';
 import authConfig from './configs/authConfig';
 import AppContainer from './components/AppContainer';
+import { AuthTokens } from './util/typings';
 import './App.css';
 
 const queryClient = new QueryClient();

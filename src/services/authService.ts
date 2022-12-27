@@ -2,13 +2,9 @@ import axios from 'axios';
 import { Buffer } from 'buffer';
 import { randomBytes, createHash } from 'crypto-browserify';
 import { createContext } from 'react';
-import { AuthConfig } from '../configs/authConfig';
 
-export type AuthTokens = {
-  accessToken: string;
-  expiresIn: string;
-  refreshToken: string;
-};
+import { AuthConfig } from '../configs/authConfig';
+import { AuthTokens } from '../util/typings';
 
 type PKCECodePair = {
   codeVerifier: string;
