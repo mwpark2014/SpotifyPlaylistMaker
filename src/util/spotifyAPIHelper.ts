@@ -106,10 +106,7 @@ export const getPlaylists = async (
     },
   );
 
-export const getTracks = async (
-  authToken: string | undefined,
-  playlistId: string | undefined,
-) => {
+export const getTracks = async (authToken: string, playlistId: string) => {
   const searchParams = new URLSearchParams({
     offset: '0',
     limit: '20',
