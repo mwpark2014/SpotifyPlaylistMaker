@@ -16,7 +16,7 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
 
   useQuery(
     ['tracks', playlistId],
-    useAuth<SpotifyTracksResponse>(getTracks, playlistId!),
+    useAuth<SpotifyTracksResponse>(config => getTracks(config, playlistId!)),
     {
       enabled: playlistId != null,
       onSuccess: data => {

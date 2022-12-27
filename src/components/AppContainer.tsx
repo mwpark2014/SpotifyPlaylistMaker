@@ -18,7 +18,7 @@ function AppContainer() {
 
   const { data: profileResponse } = useQuery(
     'profile',
-    useAuth<SpotifyProfileResponse>(getMyProfile),
+    useAuth<SpotifyProfileResponse>(config => getMyProfile(config)),
     {
       enabled: isLoggedIn,
     },
@@ -26,7 +26,7 @@ function AppContainer() {
 
   const { data: playlistsResponse } = useQuery(
     'playlists',
-    useAuth<SpotifyPlaylistsResponse>(getMyPlaylists),
+    useAuth<SpotifyPlaylistsResponse>(config => getMyPlaylists(config)),
     { enabled: isLoggedIn },
   );
 
