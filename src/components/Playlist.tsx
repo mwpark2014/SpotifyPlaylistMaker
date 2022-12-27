@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import {
@@ -103,4 +103,4 @@ function DraggableTrack({
   );
 }
 
-export default Playlist;
+export default memo(Playlist);

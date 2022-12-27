@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { useCallback, useContext, memo, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -61,4 +61,4 @@ function _getTrackDataFromResponse(response: { data: SpotifyTracksResponse }) {
   }));
 }
 
-export default memo(PlaylistContainer);
+export default PlaylistContainer;
