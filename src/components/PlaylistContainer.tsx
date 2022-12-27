@@ -28,14 +28,14 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   // Memoize the change handler
   const handleChange = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      const newTracksData = produce((mainTracksData, draft) => {
+      const newTracksData = produce(mainTracksData, draft => {
         const dragRow = mainTracksData[dragIndex];
         draft.splice(dragIndex, 1);
         draft.splice(hoverIndex, 0, dragRow);
       });
-      setMainTracksData(newTracksData as any);
+      setMainTracksData(newTracksData);
     },
-    [setMainTracksData],
+    [mainTracksData, setMainTracksData],
   );
 
   const handleSelect = (value: string) => {
