@@ -1,18 +1,16 @@
-import { useEffect } from 'react';
-import { AuthConfig } from '../configs/authConfig';
-import { fetchToken } from '../services/authService';
+import { AxiosResponse } from 'axios';
+import { useContext } from 'react';
 
-export default function useAuth(
-  authConfig: AuthConfig,
-  setAuthTokens: Function,
-) {
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const code = searchParams.get('code');
-    const state = searchParams.get('state');
+import { AuthContext } from '../services/authService';
 
-    if (code && state) {
-      fetchToken(authConfig, code, state, setAuthTokens);
-    }
-  }, [authConfig, setAuthTokens]);
+export default function useAuth(apiCall: Function, ...args: any[]) {
+  const authTokens = useContext(AuthContext);
+  if (!authTokens?.accessToken) {
+    // TODO: Update with refresh logic and/or better error catching
+    throw new Error('User is not authenticated');
+  }
+  const config = {
+    headers: { Authorization: `Bearer ${authTokens.accessToken}` },
+  };
+  return (): Promise<AxiosResponse> => apiCall(config, args);
 }

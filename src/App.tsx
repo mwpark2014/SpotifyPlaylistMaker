@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { AuthContext, AuthTokens } from './services/authService';
+import { AuthContext, AuthTokens, fetchToken } from './services/authService';
 import authConfig from './configs/authConfig';
-import useAuth from './hooks/useAuth';
 import AppContainer from './components/AppContainer';
 import './App.css';
 
@@ -13,7 +12,17 @@ function App() {
   const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(
     undefined,
   );
-  useAuth(authConfig, setAuthTokens);
+
+  // Detect redirect within Auth flow
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const code = searchParams.get('code');
+    const state = searchParams.get('state');
+
+    if (code && state) {
+      fetchToken(authConfig, code, state, setAuthTokens);
+    }
+  }, [setAuthTokens]);
 
   return (
     <AuthContext.Provider value={authTokens}>
