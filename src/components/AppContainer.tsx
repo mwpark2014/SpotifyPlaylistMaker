@@ -35,6 +35,7 @@ function AppContainer() {
     userPlaylists = playlistsResponse.data.items.map(playlist => ({
       name: playlist.name,
       id: playlist.id,
+      snapshotId: playlist.snapshot_id,
     }));
   }
 

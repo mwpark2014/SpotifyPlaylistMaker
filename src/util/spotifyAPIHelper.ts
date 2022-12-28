@@ -3,6 +3,7 @@ import {
   SpotifyPlaylistsResponse,
   SpotifyProfileResponse,
   SpotifyTracksResponse,
+  SpotifyUpdateResponse,
 } from './typings';
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
@@ -41,3 +42,12 @@ export const getTracks = async (
     config,
   );
 };
+
+export const updateTracks = async (
+  config: AxiosRequestConfig,
+  playlistId: string,
+) =>
+  axios.post<SpotifyUpdateResponse>(
+    `${SPOTIFY_API_BASE_URL}/playlists/${playlistId}/tracks`,
+    config,
+  );

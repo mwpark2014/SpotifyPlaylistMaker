@@ -96,6 +96,10 @@ type SpotifyAlbum = {
   name: string;
 };
 
+export type SpotifyUpdateResponse = {
+  snapshot_id: string;
+};
+
 export type AuthTokens = {
   accessToken: string;
   expiresIn: string;

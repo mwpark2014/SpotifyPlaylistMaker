@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { produce } from 'immer';
-import { useCallback, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useCallback, useContext, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -8,11 +9,18 @@ import useAuth from '../hooks/useAuth';
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
 import { getTracks } from '../util/spotifyAPIHelper';
-import { TrackT, PlaylistT, SpotifyTracksResponse } from '../util/typings';
+import {
+  TrackT,
+  PlaylistT,
+  SpotifyTracksResponse,
+  SpotifyUpdateResponse,
+} from '../util/typings';
+import { AuthContext } from '../services/authService';
 
 function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const [mainTracksData, setMainTracksData] = useState<TrackT[]>([]);
   const [playlistId, setPlaylistId] = useState<string>();
+  const authTokens = useContext(AuthContext);
 
   useQuery(
     ['tracks', playlistId],
@@ -25,9 +33,26 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
     },
   );
 
+  // const updateTracks = useAuth<SpotifyUpdateResponse>(config =>
+  // updateTracks(config, playlistId));
+  const mutation = useMutation((newOrder: any) => {
+    return axios.put<SpotifyUpdateResponse>(
+      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      newOrder,
+      {
+        headers: { Authorization: `Bearer ${authTokens?.accessToken}` },
+      },
+    );
+  });
+
   // Memoize the change handler
   const handleChange = useCallback(
     (dragIndex: number, hoverIndex: number) => {
+      mutation.mutate({
+        range_start: dragIndex,
+        insert_before: hoverIndex,
+        snapshot_id: userPlaylists[0].snapshotId,
+      });
       const newTracksData = produce(mainTracksData, draft => {
         const dragRow = mainTracksData[dragIndex];
         draft.splice(dragIndex, 1);
@@ -35,7 +60,7 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
       });
       setMainTracksData(newTracksData);
     },
-    [mainTracksData, setMainTracksData],
+    [mainTracksData, setMainTracksData, mutation, userPlaylists],
   );
 
   const handleSelect = (value: string) => {
