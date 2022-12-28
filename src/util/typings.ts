@@ -12,6 +12,7 @@ export type TrackT = {
 export type PlaylistT = {
   name: string;
   id: string;
+  snapshotId: string;
   [x: string]: unknown;
 };
 
@@ -94,6 +95,14 @@ export type SpotifyTrack = {
 
 type SpotifyAlbum = {
   name: string;
+};
+
+export type SpotifyUpdateTracksData = {
+  uris?: string;
+  range_start: number;
+  insert_before: number;
+  range_length?: number;
+  snapshot_id: string;
 };
 
 export type SpotifyUpdateResponse = {

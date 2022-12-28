@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { produce } from 'immer';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -8,19 +7,18 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import useAuth from '../hooks/useAuth';
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
-import { getTracks } from '../util/spotifyAPIHelper';
+import { getTracks, updateTracks } from '../util/spotifyAPIHelper';
 import {
   TrackT,
   PlaylistT,
   SpotifyTracksResponse,
   SpotifyUpdateResponse,
+  SpotifyUpdateTracksData,
 } from '../util/typings';
-import { AuthContext } from '../services/authService';
 
 function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const [mainTracksData, setMainTracksData] = useState<TrackT[]>([]);
   const [playlistId, setPlaylistId] = useState<string>();
-  const authTokens = useContext(AuthContext);
 
   useQuery(
     ['tracks', playlistId],
@@ -35,17 +33,12 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
     },
   );
 
-  // const updateTracks = useAuth<SpotifyUpdateResponse>(config =>
-  // updateTracks(config, playlistId));
-  const mutation = useMutation((newOrder: any) => {
-    return axios.put<SpotifyUpdateResponse>(
-      `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-      newOrder,
-      {
-        headers: { Authorization: `Bearer ${authTokens?.accessToken}` },
-      },
-    );
-  });
+  const mutation = useMutation(
+    useAuth<SpotifyUpdateResponse>(
+      (config, updateData: SpotifyUpdateTracksData) =>
+        updateTracks(config, updateData, playlistId!),
+    ),
+  );
 
   // Memoize the change handler
   const handleChange = useCallback(
@@ -53,7 +46,7 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
       mutation.mutate({
         range_start: dragIndex,
         insert_before: hoverIndex,
-        snapshot_id: userPlaylists[0].snapshotId,
+        snapshot_id: userPlaylists[0].snapshotId, // TODO: Find snapshot for each playlist
       });
       const newTracksData = produce(mainTracksData, draft => {
         const dragRow = mainTracksData[dragIndex];
