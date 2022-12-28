@@ -55,6 +55,7 @@ function Playlist({
           onPlaylistChange,
         } as any;
       }}
+      pagination={false}
     />
   );
 }
