@@ -7,7 +7,15 @@ import AppContainer from './components/AppContainer';
 import { AuthTokens } from './util/typings';
 import './App.css';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchIntervalInBackground: false,
+    },
+  },
+});
 
 function App() {
   const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(

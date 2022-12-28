@@ -27,6 +27,8 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
     useAuth<SpotifyTracksResponse>(config => getTracks(config, playlistId!)),
     {
       enabled: playlistId != null,
+      cacheTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000, // 5 minutes
       onSuccess: data => {
         setMainTracksData(_getTrackDataFromResponse(data));
       },
