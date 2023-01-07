@@ -40,7 +40,7 @@ function AppContainer() {
   }
 
   return (
-    <div className="App">
+    <div className="flex flex-col items-center justify-center">
       {isLoggedIn && <h1>{`Welcome ${profileResponse?.data.display_name}`}</h1>}
       {!isLoggedIn && <SpotifyLoginLink />}
       {isLoggedIn && <PlaylistContainer userPlaylists={userPlaylists} />}
@@ -51,12 +51,22 @@ function AppContainer() {
 
 function SpotifyLoginLink(): ReactElement {
   return (
-    <button onClick={() => authorize(authConfig)}>Login to Spotify</button>
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+      onClick={() => authorize(authConfig)}>
+      Login to Spotify
+    </button>
   );
 }
 
 function SpotifyLogoutLink(): ReactElement {
-  return <button onClick={() => logout(authConfig)}>Log out of Spotify</button>;
+  return (
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+      onClick={() => logout(authConfig)}>
+      Log out of Spotify
+    </button>
+  );
 }
 
 export default AppContainer;
