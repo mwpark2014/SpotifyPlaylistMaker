@@ -18,6 +18,7 @@ import {
 
 function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const [mainTracksData, setMainTracksData] = useState<TrackT[]>([]);
+  const [stagingTracksData, setStagingTracksData] = useState<TrackT[]>([]);
   const [playlistId, setPlaylistId] = useState<string>();
 
   useQuery(
@@ -62,19 +63,27 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
     setPlaylistId(value);
   };
 
+  const stagingPlaylist = (
+    <div className="flex flex-col basis-1/2">
+      <div className="h-20" />
+      <Playlist tracks={stagingTracksData} onPlaylistChange={handleChange} />
+    </div>
+  );
+
+  const mainPlaylist = (
+    <div className="flex flex-col basis-1/2">
+      <div className="h-20">
+        <PlaylistSelect playlists={userPlaylists} onSelect={handleSelect} />
+      </div>
+      <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
+    </div>
+  );
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="flex flex-row w-full">
-        <div className="flex flex-col flex-grow">
-          <div className="h-20" />
-          <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
-        </div>
-        <div className="flex flex-col flex-grow">
-          <div className="h-20">
-            <PlaylistSelect playlists={userPlaylists} onSelect={handleSelect} />
-          </div>
-          <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
-        </div>
+        {stagingPlaylist}
+        {mainPlaylist}
       </div>
     </DndProvider>
   );
