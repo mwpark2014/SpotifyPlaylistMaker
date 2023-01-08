@@ -60,7 +60,7 @@ export const search = async (config: AxiosRequestConfig, query: string) => {
   const searchParams = new URLSearchParams(
     Object.assign({
       offset: '0',
-      limit: '10',
+      limit: '4',
       q: query,
       type: 'album,playlist,track',
     }),
