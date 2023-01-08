@@ -4,9 +4,11 @@ import { PlaylistT } from '../util/typings';
 function PlaylistSelect({
   playlists,
   onSelect,
+  className,
 }: {
   playlists: PlaylistT[];
   onSelect: (value: string, option: any) => void;
+  className?: string;
 }) {
   const options = playlists.map(playlist => ({
     value: playlist.id,
@@ -14,6 +16,7 @@ function PlaylistSelect({
   }));
   return (
     <Select
+      className={className}
       showSearch
       style={{
         width: 200,

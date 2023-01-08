@@ -64,10 +64,15 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex flex-row">
-        <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
-        <div className="flex flex-col">
-          <PlaylistSelect playlists={userPlaylists} onSelect={handleSelect} />
+      <div className="flex flex-row w-full">
+        <div className="flex flex-col flex-grow">
+          <div className="h-20" />
+          <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
+        </div>
+        <div className="flex flex-col flex-grow">
+          <div className="h-20">
+            <PlaylistSelect playlists={userPlaylists} onSelect={handleSelect} />
+          </div>
           <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
         </div>
       </div>
