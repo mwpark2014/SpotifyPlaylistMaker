@@ -12,26 +12,28 @@ import { DRAGGABLE_TRACK_TYPE } from '../util/constants';
 import { TrackT } from '../util/typings';
 import './Playlist.css';
 
+const COL_CLS = 'p-2';
+
 const columns: ColumnsType<TrackT> = [
   {
     title: 'Title',
     dataIndex: 'title',
-    className: 'p-2',
+    className: COL_CLS,
   },
   {
     title: 'Album',
     dataIndex: 'album',
-    className: 'p-2',
+    className: COL_CLS,
   },
   {
     title: 'Date Added',
     dataIndex: 'dateAdded',
-    className: 'p-2',
+    className: COL_CLS,
   },
   {
     title: 'Duration',
     dataIndex: 'duration',
-    className: 'p-2',
+    className: COL_CLS,
   },
 ];
 
