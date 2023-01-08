@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AutoComplete, Input } from 'antd';
 import { AxiosResponse } from 'axios';
+import { debounce } from 'lodash';
 
 import useAuth from '../hooks/useAuth';
 import { search } from '../util/spotifyAPIHelper';
@@ -11,13 +12,22 @@ export default function SearchBar({ className }: { className?: string }) {
   const getSearchResults = useAuth<SpotifySearchResponse>((config, value) =>
     search(config, value),
   );
+  const debouncedGetSearchResults = debounce(
+    (value: string) => getSearchResults(value),
+    250,
+    { leading: false },
+  );
+
   // SyntheticEvent<HTMLInputElement>
   const handleChange = (e: any) => {
-    getSearchResults(e.target.value).then(response => {
-      debugger;
-      const results = _transformData(response);
-      setSearchResults(results);
-    });
+    const searchResultsResponse = debouncedGetSearchResults(e.target.value);
+    if (searchResultsResponse) {
+      searchResultsResponse.then((response: any) => {
+        // debugger;
+        const results = _transformData(response);
+        setSearchResults(results);
+      });
+    }
   };
 
   return (
