@@ -16,18 +16,22 @@ const columns: ColumnsType<TrackT> = [
   {
     title: 'Title',
     dataIndex: 'title',
+    className: 'p-2',
   },
   {
     title: 'Album',
     dataIndex: 'album',
+    className: 'p-2',
   },
   {
     title: 'Date Added',
     dataIndex: 'dateAdded',
+    className: 'p-2',
   },
   {
     title: 'Duration',
     dataIndex: 'duration',
+    className: 'p-2',
   },
 ];
 
@@ -46,6 +50,7 @@ function Playlist({
 }) {
   return (
     <Table
+      className="mx-3 overflow-auto"
       columns={columns}
       dataSource={tracks}
       components={components}
@@ -97,8 +102,7 @@ function DraggableTrack({
   return (
     <tr
       ref={ref}
-      className={`${className}${isOver ? dropClassName : ''}`}
-      style={{ cursor: 'move', ...style }}
+      className={`p-2 cursor-move ${className}${isOver ? dropClassName : ''}`}
       {...restProps}
     />
   );

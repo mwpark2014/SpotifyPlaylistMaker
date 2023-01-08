@@ -5,8 +5,3 @@
 .ant-table tr.drop-over-upward td {
   border-top: 2px dashed #1890ff;
 }
-
-.ant-table .ant-table-container {
-  height: 500px;
-  overflow: auto;
-}
