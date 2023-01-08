@@ -7,6 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import useAuth from '../hooks/useAuth';
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
+import SearchBar from './SearchBar';
 import { getTracks, updateTracks } from '../util/spotifyAPIHelper';
 import {
   TrackT,
@@ -65,7 +66,9 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
 
   const stagingPlaylist = (
     <div className="flex flex-col basis-1/2">
-      <div className="h-20" />
+      <div className="h-20">
+        <SearchBar className="p-4" />
+      </div>
       <Playlist tracks={stagingTracksData} onPlaylistChange={handleChange} />
     </div>
   );

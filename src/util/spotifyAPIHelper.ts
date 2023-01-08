@@ -56,22 +56,16 @@ export const updateTracks = async (
     config,
   );
 
-export const search = async (
-  config: AxiosRequestConfig,
-  query: string,
-  type?: string,
-) => {
+export const search = async (config: AxiosRequestConfig, query: string) => {
   const searchParams = new URLSearchParams(
-    Object.assign(
-      {
-        offset: '0',
-        limit: '10',
-        q: query,
-      },
-      type && { type },
-    ),
+    Object.assign({
+      offset: '0',
+      limit: '10',
+      q: query,
+      type: 'album,playlist,track',
+    }),
   );
-  axios.get<SpotifySearchResponse>(
+  return axios.get<SpotifySearchResponse>(
     `${SPOTIFY_API_BASE_URL}/search?${searchParams}`,
     config,
   );

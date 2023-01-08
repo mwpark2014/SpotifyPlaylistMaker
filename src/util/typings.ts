@@ -110,10 +110,10 @@ export type SpotifyUpdateResponse = {
 };
 
 export type SpotifySearchResponse = {
-  tracks?: SpotifySearchResult[];
-  artists?: SpotifySearchResult[];
-  albums?: SpotifySearchResult[];
-  playlists?: SpotifySearchResult[];
+  tracks?: SpotifySearchResult;
+  artists?: SpotifySearchResult;
+  albums?: SpotifySearchResult;
+  playlists?: SpotifySearchResult;
 };
 
 type SpotifySearchResult = {
