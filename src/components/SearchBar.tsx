@@ -14,21 +14,22 @@ export default function SearchBar({ className }: { className?: string }) {
     search(config, value),
   );
   const debouncedGetSearchResults = debounce(
-    (value: string) => getSearchResults(value),
-    250,
-    { leading: false },
-  );
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchResultsResponse = debouncedGetSearchResults(e.target.value);
-    if (searchResultsResponse) {
-      searchResultsResponse.then(
+    (value: string) =>
+      getSearchResults(value).then(
         (response: AxiosResponse<SpotifySearchResponse>) => {
           const results = _transformData(response.data);
           setSearchResults(results);
         },
-      );
+      ),
+    250,
+  );
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Don't kick off a search if input is empty
+    if (!e.target.value) {
+      return;
     }
+    debouncedGetSearchResults(e.target.value);
   };
 
   return (
