@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import {
   SpotifyPlaylistsResponse,
   SpotifyProfileResponse,
+  SpotifySearchResponse,
   SpotifyTracksResponse,
   SpotifyUpdateResponse,
   SpotifyUpdateTracksData,
@@ -54,3 +55,24 @@ export const updateTracks = async (
     updateData,
     config,
   );
+
+export const search = async (
+  config: AxiosRequestConfig,
+  query: string,
+  type?: string,
+) => {
+  const searchParams = new URLSearchParams(
+    Object.assign(
+      {
+        offset: '0',
+        limit: '10',
+        q: query,
+      },
+      type && { type },
+    ),
+  );
+  axios.get<SpotifySearchResponse>(
+    `${SPOTIFY_API_BASE_URL}/search?${searchParams}`,
+    config,
+  );
+};

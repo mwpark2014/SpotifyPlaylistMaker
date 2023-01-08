@@ -109,6 +109,23 @@ export type SpotifyUpdateResponse = {
   snapshot_id: string;
 };
 
+export type SpotifySearchResponse = {
+  tracks?: SpotifySearchResult[];
+  artists?: SpotifySearchResult[];
+  albums?: SpotifySearchResult[];
+  playlists?: SpotifySearchResult[];
+};
+
+type SpotifySearchResult = {
+  href: string;
+  items: any[];
+  limit: number;
+  next: string;
+  offset: number;
+  previous: string;
+  total: number;
+};
+
 export type AuthTokens = {
   accessToken: string;
   expiresIn: string;
