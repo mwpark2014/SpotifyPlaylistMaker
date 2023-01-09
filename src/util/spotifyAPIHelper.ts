@@ -1,9 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import {
+  SpotifyAlbumTracksResponse,
   SpotifyPlaylistsResponse,
+  SpotifyPlaylistTracksResponse,
   SpotifyProfileResponse,
   SpotifySearchResponse,
-  SpotifyTracksResponse,
   SpotifyUpdateResponse,
   SpotifyUpdateTracksData,
 } from './typings';
@@ -30,17 +31,31 @@ export const getPlaylists = async (
     config,
   );
 
-export const getTracks = async (
+export const getTracksFromPlaylist = async (
   config: AxiosRequestConfig,
   playlistId: string,
-): Promise<AxiosResponse<SpotifyTracksResponse>> => {
+): Promise<AxiosResponse<SpotifyPlaylistTracksResponse>> => {
   const searchParams = new URLSearchParams({
     offset: '0',
     limit: '20',
     fields: 'items(added_at,track(name,album(name),uri,duration_ms))',
   });
-  return axios.get<SpotifyTracksResponse>(
+  return axios.get<SpotifyPlaylistTracksResponse>(
     `${SPOTIFY_API_BASE_URL}/playlists/${playlistId}/tracks?${searchParams}`,
+    config,
+  );
+};
+
+export const getTracksFromAlbum = async (
+  config: AxiosRequestConfig,
+  albumId: string,
+): Promise<AxiosResponse<SpotifyAlbumTracksResponse>> => {
+  const searchParams = new URLSearchParams({
+    offset: '0',
+    limit: '20',
+  });
+  return axios.get<SpotifyAlbumTracksResponse>(
+    `${SPOTIFY_API_BASE_URL}/albums/${albumId}/tracks?${searchParams}`,
     config,
   );
 };

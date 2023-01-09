@@ -1,3 +1,4 @@
+import { BaseOptionType } from 'antd/es/select';
 import { produce } from 'immer';
 import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
@@ -8,29 +9,71 @@ import useAuth from '../hooks/useAuth';
 import Playlist from './Playlist';
 import PlaylistSelect from './PlaylistSelect';
 import SearchBar from './SearchBar';
-import { getTracks, updateTracks } from '../util/spotifyAPIHelper';
+import {
+  getTracksFromAlbum,
+  getTracksFromPlaylist,
+  updateTracks,
+} from '../util/spotifyAPIHelper';
 import {
   TrackT,
   PlaylistT,
-  SpotifyTracksResponse,
+  SpotifyAlbumTracksResponse,
+  SpotifyPlaylistTracksResponse,
   SpotifyUpdateResponse,
   SpotifyUpdateTracksData,
 } from '../util/typings';
+
+type StagingSelection = {
+  id: string;
+  type: string;
+  name: string;
+};
 
 function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const [mainTracksData, setMainTracksData] = useState<TrackT[]>([]);
   const [stagingTracksData, setStagingTracksData] = useState<TrackT[]>([]);
   const [playlistId, setPlaylistId] = useState<string>();
+  const [stageSelection, setStageSelection] = useState<StagingSelection>();
 
   useQuery(
-    ['tracks', playlistId],
-    useAuth<SpotifyTracksResponse>(config => getTracks(config, playlistId!)),
+    ['playlistTracks', playlistId],
+    useAuth<SpotifyPlaylistTracksResponse>(config =>
+      getTracksFromPlaylist(config, playlistId!),
+    ),
     {
       enabled: playlistId != null,
       cacheTime: 5 * 60 * 1000, // 5 minutes
       staleTime: 5 * 60 * 1000, // 5 minutes
       onSuccess: data => {
-        setMainTracksData(_getTrackDataFromResponse(data));
+        setMainTracksData(_getTrackDataFromPlaylistResponse(data));
+      },
+    },
+  );
+
+  useQuery(
+    ['playlistTracks', stageSelection && stageSelection.id],
+    useAuth<SpotifyPlaylistTracksResponse>(config =>
+      getTracksFromPlaylist(config, stageSelection!.id),
+    ),
+    {
+      enabled: !!stageSelection && stageSelection.type === 'playlist',
+      onSuccess: data => {
+        setStagingTracksData(_getTrackDataFromPlaylistResponse(data));
+      },
+    },
+  );
+
+  useQuery(
+    ['albumTracks', stageSelection && stageSelection.id],
+    useAuth<SpotifyAlbumTracksResponse>(config =>
+      getTracksFromAlbum(config, stageSelection!.id),
+    ),
+    {
+      enabled: !!stageSelection && stageSelection.type === 'album',
+      onSuccess: data => {
+        setStagingTracksData(
+          _getTrackDataFromAlbumResponse(data, stageSelection!.name),
+        );
       },
     },
   );
@@ -60,14 +103,27 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
     [mainTracksData, setMainTracksData, mutation, userPlaylists],
   );
 
-  const handleSelect = (value: string) => {
+  const handleMainSelect = (value: string) => {
     setPlaylistId(value);
+  };
+
+  const handleStagingSelect = (value: string, option: BaseOptionType) => {
+    if (option.type === 'album' || option.type === 'playlist') {
+      setStageSelection({
+        id: option.key,
+        type: option.type,
+        name: option.value,
+      });
+    }
+    if (option.type === 'track') {
+      setStagingTracksData([option as TrackT]);
+    }
   };
 
   const stagingPlaylist = (
     <div className="flex flex-col basis-1/2">
       <div className="h-20">
-        <SearchBar className="p-4" />
+        <SearchBar className="p-4" onSelect={handleStagingSelect} />
       </div>
       <Playlist tracks={stagingTracksData} onPlaylistChange={handleChange} />
     </div>
@@ -76,7 +132,7 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   const mainPlaylist = (
     <div className="flex flex-col basis-1/2">
       <div className="h-20">
-        <PlaylistSelect playlists={userPlaylists} onSelect={handleSelect} />
+        <PlaylistSelect playlists={userPlaylists} onSelect={handleMainSelect} />
       </div>
       <Playlist tracks={mainTracksData} onPlaylistChange={handleChange} />
     </div>
@@ -92,7 +148,9 @@ function PlaylistContainer({ userPlaylists }: { userPlaylists: PlaylistT[] }) {
   );
 }
 
-function _getTrackDataFromResponse(response: { data: SpotifyTracksResponse }) {
+function _getTrackDataFromPlaylistResponse(response: {
+  data: SpotifyPlaylistTracksResponse;
+}) {
   return response.data.items.map((item, index) => ({
     key: index,
     dateAdded: item.added_at,
@@ -100,6 +158,22 @@ function _getTrackDataFromResponse(response: { data: SpotifyTracksResponse }) {
     album: item.track.album.name,
     duration: '' + item.track.duration_ms,
     uri: item.track.uri,
+  }));
+}
+
+function _getTrackDataFromAlbumResponse(
+  response: {
+    data: SpotifyAlbumTracksResponse;
+  },
+  albumName: string,
+) {
+  return response.data.items.map((item, index) => ({
+    key: index,
+    dateAdded: '',
+    title: item.name,
+    album: albumName,
+    duration: '' + item.duration_ms,
+    uri: item.uri,
   }));
 }
 

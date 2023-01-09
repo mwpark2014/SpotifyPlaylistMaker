@@ -1,15 +1,21 @@
 import { useState, ChangeEvent } from 'react';
 import { AutoComplete, Input } from 'antd';
+import { BaseOptionType } from 'antd/es/select';
 import { AxiosResponse } from 'axios';
 import { debounce } from 'lodash';
 
 import useAuth from '../hooks/useAuth';
 import { search } from '../util/spotifyAPIHelper';
 import { SpotifySearchResponse } from '../util/typings';
-import { BaseOptionType } from 'antd/es/select';
 
-export default function SearchBar({ className }: { className?: string }) {
-  const [searchResults, setSearchResults] = useState<any>([]);
+export default function SearchBar({
+  className,
+  onSelect,
+}: {
+  className?: string;
+  onSelect: (value: string, option: BaseOptionType) => void;
+}) {
+  const [searchResults, setSearchResults] = useState<BaseOptionType[]>([]);
   const getSearchResults = useAuth<SpotifySearchResponse>((config, value) =>
     search(config, value),
   );
@@ -27,6 +33,7 @@ export default function SearchBar({ className }: { className?: string }) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     // Don't kick off a search if input is empty
     if (!e.target.value) {
+      setSearchResults([]);
       return;
     }
     debouncedGetSearchResults(e.target.value);
@@ -38,7 +45,8 @@ export default function SearchBar({ className }: { className?: string }) {
       options={searchResults}
       style={{
         width: 400,
-      }}>
+      }}
+      onSelect={onSelect}>
       <Input.Search
         onChange={handleChange}
         size="middle"
@@ -48,30 +56,39 @@ export default function SearchBar({ className }: { className?: string }) {
   );
 }
 
-function _transformData(searchResponse: SpotifySearchResponse): any {
+function _transformData(
+  searchResponse: SpotifySearchResponse,
+): BaseOptionType[] {
   return [
     {
       label: 'Tracks',
       options:
         searchResponse.tracks?.items.map((track: any) => ({
-          label: track.name,
-          value: track.id,
+          value: track.name,
+          key: track.id,
+          type: 'track',
+          title: track.name,
+          duration: track.duration_ms,
+          album: track.album.name,
+          uri: track.uri,
         })) || [],
     },
     {
       label: 'Albums',
       options:
         searchResponse.albums?.items.map((album: any) => ({
-          label: album.name,
-          value: album.id,
+          value: album.name,
+          key: album.id,
+          type: 'album',
         })) || [],
     },
     {
       label: 'Playlists',
       options:
         searchResponse.playlists?.items.map((playlist: any) => ({
-          label: playlist.name,
-          value: playlist.id,
+          value: playlist.name,
+          key: playlist.id,
+          type: 'playlist',
         })) || [],
     },
   ];

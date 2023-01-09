@@ -79,21 +79,49 @@ export type SpotifyPlaylist = {
   uri: string;
 };
 
-export type SpotifyTracksResponse = {
+export type SpotifyPlaylistTracksResponse = {
   items: {
     added_at: string;
-    track: SpotifyTrack;
+    track: SpotifyPlaylistTrack;
   }[];
 };
 
-export type SpotifyTrack = {
+export type SpotifyPlaylistTrack = {
+  artists: SpotifyArtist[];
   name: string;
   album: SpotifyAlbum;
   uri: string;
   duration_ms: number;
 };
 
+export type SpotifyAlbumTracksResponse = {
+  items: SpotifyAlbumTrack[];
+};
+
+type SpotifyAlbumTrack = {
+  artists: SpotifyArtist[];
+  disc_number: number;
+  duration_ms: number;
+  explicit: boolean;
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  is_local: boolean;
+  name: string;
+  preview_url: string;
+  track_number: number;
+  type: string;
+  uri: string;
+};
+
 type SpotifyAlbum = {
+  name: string;
+};
+
+type SpotifyArtist = {
+  id: string;
   name: string;
 };
 

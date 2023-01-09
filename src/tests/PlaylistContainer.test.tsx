@@ -1,4 +1,4 @@
-export const testTracks = {
+export const testPlaylistTracks = {
   items: [
     {
       added_at: '2015-09-25T01:01:45Z',
@@ -6,6 +6,16 @@ export const testTracks = {
         album: {
           name: 'All American',
         },
+        artists: [
+          {
+            id: '382aq8Pij5V2nE2JMHMoxl',
+            name: 'Hoodie Allen',
+          },
+          {
+            id: '7uHOp2UvCRbPU1sNKk57hv',
+            name: 'Jhameel',
+          },
+        ],
         duration_ms: 201226,
         name: 'No Faith in Brooklyn (feat. Jhameel)',
         uri: 'spotify:track:4V8uu21mnpyg7BElNNJdPs',
@@ -17,6 +27,12 @@ export const testTracks = {
         album: {
           name: 'Americoustic',
         },
+        artists: [
+          {
+            id: '382aq8Pij5V2nE2JMHMoxl',
+            name: 'Hoodie Allen',
+          },
+        ],
         duration_ms: 224385,
         name: 'No Interruption (Acoustic)',
         uri: 'spotify:track:5zRTc6uDvHqssG2fvnVS1N',
@@ -107,4 +123,121 @@ export const testPlaylists = {
   offset: 0,
   previous: null,
   total: 25,
+};
+
+export const testAlbumTracks = {
+  href: 'https://api.spotify.com/v1/albums/4YomxhmDglPvD93W3T6l1V/tracks?offset=0&limit=20&locale=en-US,en;q=0.9,fr;q=0.8',
+  items: [
+    {
+      artists: [
+        {
+          external_urls: {
+            spotify: 'https://open.spotify.com/artist/45eNHdiiabvmbp4erw26rg',
+          },
+          href: 'https://api.spotify.com/v1/artists/45eNHdiiabvmbp4erw26rg',
+          id: '45eNHdiiabvmbp4erw26rg',
+          name: 'ILLENIUM',
+          type: 'artist',
+          uri: 'spotify:artist:45eNHdiiabvmbp4erw26rg',
+        },
+        {
+          external_urls: {
+            spotify: 'https://open.spotify.com/artist/1vSN1fsvrzpbttOYGsliDr',
+          },
+          href: 'https://api.spotify.com/v1/artists/1vSN1fsvrzpbttOYGsliDr',
+          id: '1vSN1fsvrzpbttOYGsliDr',
+          name: 'Tori Kelly',
+          type: 'artist',
+          uri: 'spotify:artist:1vSN1fsvrzpbttOYGsliDr',
+        },
+      ],
+      available_markets: [
+        'US',
+        'UY',
+        'UZ',
+        'VC',
+        'VE',
+        'VN',
+        'VU',
+        'WS',
+        'XK',
+        'ZA',
+        'ZM',
+        'ZW',
+      ],
+      disc_number: 1,
+      duration_ms: 230571,
+      explicit: false,
+      external_urls: {
+        spotify: 'https://open.spotify.com/track/1suqXPrYygZ7BYiSfaVZE4',
+      },
+      href: 'https://api.spotify.com/v1/tracks/1suqXPrYygZ7BYiSfaVZE4',
+      id: '1suqXPrYygZ7BYiSfaVZE4',
+      is_local: false,
+      name: 'Blame Myself',
+      preview_url:
+        'https://p.scdn.co/mp3-preview/aa4819369cd1f8aae7611775a424c593e8717120?cid=70cd45ebb41f48b0a582a6a6ecf23f72',
+      track_number: 1,
+      type: 'track',
+      uri: 'spotify:track:1suqXPrYygZ7BYiSfaVZE4',
+    },
+    {
+      artists: [
+        {
+          external_urls: {
+            spotify: 'https://open.spotify.com/artist/45eNHdiiabvmbp4erw26rg',
+          },
+          href: 'https://api.spotify.com/v1/artists/45eNHdiiabvmbp4erw26rg',
+          id: '45eNHdiiabvmbp4erw26rg',
+          name: 'ILLENIUM',
+          type: 'artist',
+          uri: 'spotify:artist:45eNHdiiabvmbp4erw26rg',
+        },
+        {
+          external_urls: {
+            spotify: 'https://open.spotify.com/artist/7gHscNMDI8FF8pcgrV8eIn',
+          },
+          href: 'https://api.spotify.com/v1/artists/7gHscNMDI8FF8pcgrV8eIn',
+          id: '7gHscNMDI8FF8pcgrV8eIn',
+          name: 'Matt Maeson',
+          type: 'artist',
+          uri: 'spotify:artist:7gHscNMDI8FF8pcgrV8eIn',
+        },
+      ],
+      available_markets: [
+        'US',
+        'UY',
+        'UZ',
+        'VC',
+        'VE',
+        'VN',
+        'VU',
+        'WS',
+        'XK',
+        'ZA',
+        'ZM',
+        'ZW',
+      ],
+      disc_number: 1,
+      duration_ms: 240000,
+      explicit: false,
+      external_urls: {
+        spotify: 'https://open.spotify.com/track/0R7d7JyYRKcuTEO1j0Wkcw',
+      },
+      href: 'https://api.spotify.com/v1/tracks/0R7d7JyYRKcuTEO1j0Wkcw',
+      id: '0R7d7JyYRKcuTEO1j0Wkcw',
+      is_local: false,
+      name: 'Heavenly Side',
+      preview_url:
+        'https://p.scdn.co/mp3-preview/240f551d42f0cfecdff76cb74e2590b1a0048fcc?cid=70cd45ebb41f48b0a582a6a6ecf23f72',
+      track_number: 2,
+      type: 'track',
+      uri: 'spotify:track:0R7d7JyYRKcuTEO1j0Wkcw',
+    },
+  ],
+  limit: 20,
+  next: null,
+  offset: 0,
+  previous: null,
+  total: 2,
 };
